@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
+import 'Payment/payment_Screen.dart';
+
 class Chargingstation extends StatefulWidget {
   const Chargingstation({super.key});
 
@@ -206,7 +208,10 @@ class _ChargingstationState extends State<Chargingstation> {
                           padding: EdgeInsets.all(0.0)),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Payment()));
+                      },
                       child: Ink(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(

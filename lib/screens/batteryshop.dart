@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:newpro/screens/Payment/battery_payment_screen.dart';
 
 class Batteryshop extends StatefulWidget {
   const Batteryshop({super.key});
@@ -201,7 +202,13 @@ class _BatteryshopState extends State<Batteryshop> {
                           padding: EdgeInsets.all(0.0)),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Battery_Payment_Screen()));
+                      },
                       child: Ink(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(

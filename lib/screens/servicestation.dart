@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:newpro/screens/Payment/service_payment_screen.dart';
 
 class Servicestation extends StatefulWidget {
   const Servicestation({super.key});
@@ -204,7 +205,13 @@ class _ServicestationState extends State<Servicestation> {
                           padding: EdgeInsets.all(0.0)),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Service_Payment_Screen()));
+                      },
                       child: Ink(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
