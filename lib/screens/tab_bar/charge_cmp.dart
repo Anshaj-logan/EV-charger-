@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CompletedBookings extends StatefulWidget {
-  const CompletedBookings({Key? key}) : super(key: key);
+class ChargeCmp extends StatefulWidget {
+  const ChargeCmp({Key? key}) : super(key: key);
 
   @override
-  State<CompletedBookings> createState() => _CompletedBookingsState();
+  State<ChargeCmp> createState() => _ChargeCmpState();
 }
 
-class _CompletedBookingsState extends State<CompletedBookings> {
+class _ChargeCmpState extends State<ChargeCmp> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -33,20 +33,14 @@ class _CompletedBookingsState extends State<CompletedBookings> {
                     fontWeight: FontWeight.w600, fontSize: 15),
               ),
               leading: Text(
-                "Break fluid change",
+                "Slot Number",
                 style: GoogleFonts.montserrat(
-                    fontWeight: FontWeight.bold, fontSize: 18),
-              )
-              // CircleAvatar(
-              //   radius: 30,
-              //   backgroundColor: Colors.green,
-              //   backgroundImage: AssetImage("images/images87.jpeg"),
-              // ),
-              );
+                    fontWeight: FontWeight.bold, fontSize: 22),
+              ));
         },
         separatorBuilder: (ctx, index) {
           return Divider();
         },
-        itemCount: 100);
+        itemCount: 20);
   }
 }

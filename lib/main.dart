@@ -4,6 +4,7 @@ import 'package:newpro/screens/splashScreen.dart';
 
 void main() {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     home:
         // LoginPage(),
         Splash(),

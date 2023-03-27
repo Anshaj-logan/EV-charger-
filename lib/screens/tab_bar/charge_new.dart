@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class NewBookings extends StatefulWidget {
-  const NewBookings({Key? key}) : super(key: key);
+class ChargeNew extends StatefulWidget {
+  const ChargeNew({Key? key}) : super(key: key);
 
   @override
-  State<NewBookings> createState() => _NewBookingsState();
+  State<ChargeNew> createState() => _ChargeNewState();
 }
 
-class _NewBookingsState extends State<NewBookings> {
+class _ChargeNewState extends State<ChargeNew> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -23,8 +23,8 @@ class _NewBookingsState extends State<NewBookings> {
                 trailing: IconButton(
                   onPressed: () {},
                   icon: Icon(
-                    Icons.build,
-                    color: Colors.deepOrange,
+                    Icons.navigate_next,
+                    color: Colors.green,
                     size: 40,
                   ),
                 ),
@@ -34,16 +34,10 @@ class _NewBookingsState extends State<NewBookings> {
                       fontWeight: FontWeight.w600, fontSize: 15),
                 ),
                 leading: Text(
-                  "Break fluid change",
+                  "Slot Number",
                   style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.bold, fontSize: 18),
-                )
-                // CircleAvatar(
-                //   radius: 30,
-                //   backgroundColor: Colors.green,
-                //   backgroundImage: AssetImage("images/images87.jpeg"),
-                // ),
-                ),
+                      fontWeight: FontWeight.bold, fontSize: 22),
+                )),
           );
         },
         separatorBuilder: (ctx, index) {

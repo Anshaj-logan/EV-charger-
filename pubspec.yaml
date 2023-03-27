@@ -39,6 +39,9 @@ dependencies:
   flutter_native_splash: ^2.2.17
   google_fonts: ^4.0.3
   animated_text_kit: ^4.2.2
+  http: ^0.13.5
+  fluttertoast: ^8.2.1
+  shared_preferences: ^2.0.18
 
 
 dev_dependencies:

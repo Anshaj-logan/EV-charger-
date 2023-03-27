@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:newpro/screens/userhome.dart';
+
+import '../user/userhome.dart';
 
 class PaymentSuccess extends StatefulWidget {
   const PaymentSuccess({Key? key}) : super(key: key);
