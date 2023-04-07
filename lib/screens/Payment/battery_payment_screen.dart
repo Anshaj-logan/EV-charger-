@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:newpro/screens/Payment/payment_success.dart';
 
 class Battery_Payment_Screen extends StatefulWidget {
-  const Battery_Payment_Screen({Key? key}) : super(key: key);
-
+  late String vehiclename;
+  late String amounts;
+  Battery_Payment_Screen(this.vehiclename, this.amounts);
   @override
   State<Battery_Payment_Screen> createState() => _Battery_Payment_ScreenState();
 }
@@ -69,7 +70,7 @@ class _Battery_Payment_ScreenState extends State<Battery_Payment_Screen> {
                     color: Colors.blue[600]),
                 child: Center(
                   child: Text(
-                    'Model Name',
+                    widget.vehiclename,
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -125,7 +126,7 @@ class _Battery_Payment_ScreenState extends State<Battery_Payment_Screen> {
                               ),
                               SizedBox(width: 120),
                               Text(
-                                '₹ 35000',
+                                widget.amounts,
                                 style: TextStyle(
                                     color: Colors.deepOrange, fontSize: 20),
                               ),
@@ -155,7 +156,7 @@ class _Battery_Payment_ScreenState extends State<Battery_Payment_Screen> {
                               ),
                               SizedBox(width: 30),
                               Text(
-                                '₹ 35000',
+                                widget.amounts,
                                 style: TextStyle(
                                     color: Colors.deepOrange, fontSize: 20),
                               ),

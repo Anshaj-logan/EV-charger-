@@ -29,9 +29,9 @@ class _LoginPageState extends State<LoginPage> {
   String loginId = '';
   String role = '';
   String status = '';
+  String chargeid = '';
   bool _isLoading = false;
   bool _obscureText = true;
-
   final us = TextEditingController();
   final pwd = TextEditingController();
 
@@ -53,8 +53,10 @@ class _LoginPageState extends State<LoginPage> {
       print(body);
       role = json.encode(body['role']);
       status = json.encode(body['status']);
+      chargeid = json.encode(body['chargingStationIid']);
       print('user ${user}');
       print('role ${role}');
+      print('chargeid ${chargeid}');
 
       //  print('user ${user.runtimeType}');
       //  print('role ${role.runtimeType}');
@@ -95,9 +97,17 @@ class _LoginPageState extends State<LoginPage> {
       localStorage.setString('role', role.toString());
       localStorage.setString(
           'loginId', json.encode(body['login_id']).toString());
+      localStorage.setString(
+          'chargingStationIid', json.encode(body['chargingStationIid']));
+      localStorage.setString(
+          'batteryShopId', json.encode(body['batteryShopId']));
+      localStorage.setString(
+          'serviceStationId', json.encode(body['serviceStationId']));
 
       String loginid = (localStorage.getString('login_id') ?? '');
+      // String chargeid = (localStorage.getString('chargingStationIid') ?? '');
       print(loginid);
+      print(chargeid);
     } else {
       Fluttertoast.showToast(
         msg: body['message'].toString(),

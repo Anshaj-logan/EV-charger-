@@ -1,32 +1,74 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../api.dart';
 import 'chargingstation.dart';
 
 class ChargingSlots extends StatefulWidget {
-  const ChargingSlots({Key? key}) : super(key: key);
+  late String charging_station_id;
+  late String Log_id;
+
+  ChargingSlots(this.charging_station_id, this.Log_id);
 
   @override
   State<ChargingSlots> createState() => _ChargingSlotsState();
 }
 
 class _ChargingSlotsState extends State<ChargingSlots> {
-  List Available_slots = [
-    'Slot-1',
-    'Slot-2',
-    'Slot-3',
-    'Slot-4',
-    'Slot-5',
-    'Slot-6',
-  ];
-  List Status = [
-    'Availble',
-    'Not Availble',
-    'Availble',
-    'Availble',
-    'Not Availble',
-    'Availble',
-  ];
+  late SharedPreferences localStrorage;
+  String slot_no = "";
+  late String slot;
+  String status = "";
+  late String login_id;
+  late String Charge_id;
+  List _loadslotlist = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchData();
+  }
+
+  _fetchData() async {
+    String data = "${widget.charging_station_id}";
+    String log_id = "${widget.Log_id}";
+    print("idddd${data}");
+    var res = await Api().getData('/api/charging/view-slots/' + data);
+
+    if (res.statusCode == 200) {
+      var items = json.decode(res.body)['data'];
+      print(items);
+      setState(() {
+        _loadslotlist = items;
+      });
+    } else {
+      setState(() {
+        _loadslotlist = [];
+      });
+    }
+  }
+
+  // List Available_slots = [
+  //   'Slot-1',
+  //   'Slot-2',
+  //   'Slot-3',
+  //   'Slot-4',
+  //   'Slot-5',
+  //   'Slot-6',
+  // ];
+  // List Status = [
+  //   'Availble',
+  //   'Not Availble',
+  //   'Availble',
+  //   'Availble',
+  //   'Not Availble',
+  //   'Availble',
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +94,8 @@ class _ChargingSlotsState extends State<ChargingSlots> {
         ),
       ),
       body: ListView.builder(
-          itemCount: Available_slots.length,
+          shrinkWrap: true,
+          itemCount: _loadslotlist.length,
           itemBuilder: (BuildContext context, int position) {
             return Card(
               child: Column(
@@ -74,10 +117,10 @@ class _ChargingSlotsState extends State<ChargingSlots> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              Available_slots[position],
+                              _loadslotlist[position]['slot_no'],
                               style: TextStyle(fontSize: 25),
                             ),
-                            Text(Status[position],
+                            Text(_loadslotlist[position]['status'],
                                 style: TextStyle(fontSize: 20)),
                             // Text(Amount[position],
                             //     style: TextStyle(fontSize: 18)),
@@ -90,11 +133,16 @@ class _ChargingSlotsState extends State<ChargingSlots> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
+                                Charge_id = _loadslotlist[position]
+                                    ['charging_station_id'];
+                                slot = _loadslotlist[position]['slot_no'];
+                                // String log_id = "${widget.Log_id}";
+                                // login_id = log_id;
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Chargingstation()));
+                                            Chargingstation(Charge_id, slot)));
                               },
                               child: Ink(
                                 decoration: BoxDecoration(

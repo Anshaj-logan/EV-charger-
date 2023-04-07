@@ -11,6 +11,7 @@ import 'package:newpro/screens/user/servicestation.dart';
 
 import 'package:newpro/screens/user/ucomplaintv.dart';
 import 'package:newpro/screens/user/ufeedbackv.dart';
+import 'package:newpro/screens/user/userProfile.dart';
 
 import 'batteryshop.dart';
 import 'chargingstation.dart';
@@ -45,16 +46,63 @@ class _UserHomeState extends State<UserHome> {
                 fontWeight: FontWeight.bold, fontSize: 25),
           ),
         ),
-        leading: TextButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
-            },
-            child: Icon(
-              Icons.logout,
-              color: Colors.white,
-              size: 30,
-            )),
+        // leading: TextButton(
+        //     onPressed: () {
+        //       Navigator.push(context,
+        //           MaterialPageRoute(builder: (context) => LoginPage()));
+        //     },
+        //     child: Icon(
+        //       Icons.logout,
+        //       color: Colors.white,
+        //       size: 30,
+        //     )),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Color(0xff00ADB5)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 50.0,
+                    backgroundImage: AssetImage('images/splash_logo.png'),
+                  ),
+                  SizedBox(
+                    height: 9,
+                  ),
+                  Text(
+                    'BEVs',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.account_box,
+              ),
+              title: const Text('My Account'),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) => UserProfile()));
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.logout,
+              ),
+              title: const Text('Log out'),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) => LoginPage()));
+              },
+            ),
+          ],
+        ),
       ),
       body: Container(
         height: double.maxFinite,

@@ -6,17 +6,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api.dart';
 
-class NewBookings extends StatefulWidget {
-  const NewBookings({Key? key}) : super(key: key);
+class BatteryNew extends StatefulWidget {
+  const BatteryNew({Key? key}) : super(key: key);
 
   @override
-  State<NewBookings> createState() => _NewBookingsState();
+  State<BatteryNew> createState() => _BatteryNewState();
 }
 
-class _NewBookingsState extends State<NewBookings> {
+class _BatteryNewState extends State<BatteryNew> {
   late SharedPreferences localStrorage;
 
-  late String serviceStationId;
+  late String batteryShopId;
 
   List _loadbookslotlist = [];
   bool isLoading = false;
@@ -30,11 +30,12 @@ class _NewBookingsState extends State<NewBookings> {
 
   _fetchData() async {
     localStrorage = await SharedPreferences.getInstance();
-    serviceStationId = (localStrorage.getString('serviceStationId') ?? '');
-    print('new charging ${serviceStationId})');
+    batteryShopId = (localStrorage.getString('batteryShopId') ?? '');
+    print('batteryshop Id ${batteryShopId})');
 
-    var res = await Api().getData('/api/station/view-booked-service-station/' +
-        serviceStationId.replaceAll('"', ''));
+    var res = await Api().getData(
+        '/api/battery/view-booked-batteries-battery-shop/' +
+            batteryShopId.replaceAll('"', ''));
     print(res);
     if (res.statusCode == 200) {
       var items = json.decode(res.body)['data'];
@@ -56,34 +57,28 @@ class _NewBookingsState extends State<NewBookings> {
           return Card(
             child: ListTile(
                 title: Text(
-                  _loadbookslotlist[index]['service_name'],
+                  _loadbookslotlist[index]['vehicle_name'],
                   style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.bold, fontSize: 20),
+                      fontWeight: FontWeight.w600, fontSize: 18),
                 ),
                 trailing: IconButton(
                   onPressed: () {},
                   icon: Icon(
-                    Icons.build,
-                    color: Colors.deepOrange,
+                    Icons.navigate_next,
+                    color: Colors.green,
                     size: 40,
                   ),
                 ),
                 subtitle: Text(
                   '\₹ - ${_loadbookslotlist[index]['amount']}',
                   style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w800, fontSize: 18),
+                      fontWeight: FontWeight.w600, fontSize: 18),
                 ),
                 leading: Text(
                   _loadbookslotlist[index]['date'],
                   style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w600, fontSize: 15),
-                )
-                // CircleAvatar(
-                //   radius: 30,
-                //   backgroundColor: Colors.green,
-                //   backgroundImage: AssetImage("images/images87.jpeg"),
-                // ),
-                ),
+                      fontWeight: FontWeight.bold, fontSize: 15),
+                )),
           );
         },
         separatorBuilder: (ctx, index) {

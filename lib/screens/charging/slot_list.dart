@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newpro/screens/charging/addslots.dart';
 import 'package:newpro/screens/charging/slot_status.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../api.dart';
 
 class SlotsView extends StatefulWidget {
   const SlotsView({Key? key}) : super(key: key);
@@ -11,22 +16,42 @@ class SlotsView extends StatefulWidget {
 }
 
 class _SlotsViewState extends State<SlotsView> {
-  List Available_slots = [
-    'Slot-1',
-    'Slot-2',
-    'Slot-3',
-    'Slot-4',
-    'Slot-5',
-    'Slot-6',
-  ];
-  List Status = [
-    'Availble',
-    'Not Availble',
-    'Availble',
-    'Availble',
-    'Not Availble',
-    'Availble',
-  ];
+  late SharedPreferences localStrorage;
+  String slot_no = "";
+  String status = "";
+  late String charging_station_id;
+
+  List _loadslotlist = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchData();
+  }
+
+  _fetchData() async {
+    localStrorage = await SharedPreferences.getInstance();
+    charging_station_id = (localStrorage.getString('chargingStationIid') ?? '');
+    print('new charging ${charging_station_id})');
+
+    var res = await Api().getData(
+        '/api/charging/view-slots/' + charging_station_id.replaceAll('"', ''));
+    print(res);
+    if (res.statusCode == 200) {
+      var items = json.decode(res.body)['data'];
+      print(items);
+      setState(() {
+        _loadslotlist = items;
+      });
+    } else {
+      setState(() {
+        _loadslotlist = [];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +76,8 @@ class _SlotsViewState extends State<SlotsView> {
         ),
       ),
       body: ListView.builder(
-          itemCount: Available_slots.length,
+          shrinkWrap: true,
+          itemCount: _loadslotlist.length,
           itemBuilder: (BuildContext context, int position) {
             return Card(
               child: Column(
@@ -73,10 +99,10 @@ class _SlotsViewState extends State<SlotsView> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              Available_slots[position],
+                              _loadslotlist[position]['slot_no'],
                               style: TextStyle(fontSize: 25),
                             ),
-                            Text(Status[position],
+                            Text(_loadslotlist[position]['status'],
                                 style: TextStyle(fontSize: 20)),
                             // Text(Amount[position],
                             //     style: TextStyle(fontSize: 18)),

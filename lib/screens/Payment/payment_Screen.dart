@@ -1,14 +1,54 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:newpro/screens/Payment/payment_success.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../api.dart';
 
 class Payment extends StatefulWidget {
-  const Payment({Key? key}) : super(key: key);
+  late String amount;
+  Payment(this.amount);
 
   @override
   State<Payment> createState() => _PaymentState();
 }
 
 class _PaymentState extends State<Payment> {
+  late SharedPreferences localStorage;
+  String amount = "";
+  late String login_id;
+
+  List _loadbooklist = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchData();
+  }
+
+  _fetchData() async {
+    localStorage = await SharedPreferences.getInstance();
+    String Login_id = (localStorage.getString('loginId') ?? '');
+    print('login id ${Login_id}');
+    var res = await Api().getData('/api/charging/booked-single-slots-user/' +
+        Login_id.replaceAll('"', ''));
+
+    if (res.statusCode == 200) {
+      var items = json.decode(res.body)['data'];
+      print(items);
+      setState(() {
+        _loadbooklist = items[items.length - 1]['_id'];
+      });
+    } else {
+      setState(() {
+        _loadbooklist = [];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,7 +164,7 @@ class _PaymentState extends State<Payment> {
                               ),
                               SizedBox(width: 120),
                               Text(
-                                '₹ 45',
+                                widget.amount,
                                 style: TextStyle(
                                     color: Colors.deepOrange, fontSize: 20),
                               ),
@@ -153,7 +193,7 @@ class _PaymentState extends State<Payment> {
                               ),
                               SizedBox(width: 30),
                               Text(
-                                '₹ 45',
+                                widget.amount,
                                 style: TextStyle(
                                     color: Colors.deepOrange, fontSize: 20),
                               ),

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:newpro/screens/Payment/payment_success.dart';
 
 class Service_Payment_Screen extends StatefulWidget {
-  const Service_Payment_Screen({Key? key}) : super(key: key);
+  late String amounts;
+  late String servicename;
+  Service_Payment_Screen(this.amounts, this.servicename);
 
   @override
   State<Service_Payment_Screen> createState() => _Service_Payment_ScreenState();
@@ -69,7 +71,7 @@ class _Service_Payment_ScreenState extends State<Service_Payment_Screen> {
                     color: Colors.blue[600]),
                 child: Center(
                   child: Text(
-                    'Service Type',
+                    widget.servicename,
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -125,7 +127,7 @@ class _Service_Payment_ScreenState extends State<Service_Payment_Screen> {
                               ),
                               SizedBox(width: 120),
                               Text(
-                                '₹ 120',
+                                widget.amounts,
                                 style: TextStyle(
                                     color: Colors.deepOrange, fontSize: 20),
                               ),
@@ -155,7 +157,7 @@ class _Service_Payment_ScreenState extends State<Service_Payment_Screen> {
                               ),
                               SizedBox(width: 30),
                               Text(
-                                '₹ 120',
+                                widget.amounts,
                                 style: TextStyle(
                                     color: Colors.deepOrange, fontSize: 20),
                               ),

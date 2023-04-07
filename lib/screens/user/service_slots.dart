@@ -1,29 +1,70 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newpro/screens/user/servicestation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../api.dart';
 
 class AvailableServiceList extends StatefulWidget {
-  const AvailableServiceList({Key? key}) : super(key: key);
+  late String id;
+
+  AvailableServiceList(this.id);
 
   @override
   State<AvailableServiceList> createState() => _AvailableServiceListState();
 }
 
 class _AvailableServiceListState extends State<AvailableServiceList> {
-  List Available_Services = [
-    'WATER SERVICE',
-    'BRAKE FLUID CHANGE',
-    'FILTER REPLACEMENT',
-    'OVERALL CHECKING',
-    'TIRE CHANGE'
-  ];
-  List Status = [
-    'Availble',
-    'Not Availble',
-    'Availble',
-    'Availble',
-    'Not Availble',
-  ];
+  late SharedPreferences localStrorage;
+  late String service_station_id;
+  late String S_id;
+  late String service_name;
+  late String duration;
+  late String amount;
+
+  List _loadservicelist = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchData();
+  }
+
+  _fetchData() async {
+    String data = "${widget.id}";
+    print("idddd${data}");
+    var res = await Api().getData('/api/station/view-services/' + data);
+
+    if (res.statusCode == 200) {
+      var items = json.decode(res.body)['data'];
+      print(items);
+      setState(() {
+        _loadservicelist = items;
+      });
+    } else {
+      setState(() {
+        _loadservicelist = [];
+      });
+    }
+  }
+  // List Available_Services = [
+  //   'WATER SERVICE',
+  //   'BRAKE FLUID CHANGE',
+  //   'FILTER REPLACEMENT',
+  //   'OVERALL CHECKING',
+  //   'TIRE CHANGE'
+  // ];
+  // List Status = [
+  //   'Availble',
+  //   'Not Availble',
+  //   'Availble',
+  //   'Availble',
+  //   'Not Availble',
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +90,8 @@ class _AvailableServiceListState extends State<AvailableServiceList> {
         ),
       ),
       body: ListView.builder(
-          itemCount: Available_Services.length,
+          shrinkWrap: true,
+          itemCount: _loadservicelist.length,
           itemBuilder: (BuildContext context, int position) {
             return Card(
               child: Column(
@@ -71,10 +113,12 @@ class _AvailableServiceListState extends State<AvailableServiceList> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              Available_Services[position],
+                              _loadservicelist[position]['service_name'],
                               style: TextStyle(fontSize: 22),
                             ),
-                            Text(Status[position],
+                            Text("\₹-${_loadservicelist[position]['amount']}",
+                                style: TextStyle(fontSize: 20)),
+                            Text(_loadservicelist[position]['duration'],
                                 style: TextStyle(fontSize: 20)),
                             // Text(Amount[position],
                             //     style: TextStyle(fontSize: 18)),
@@ -87,11 +131,23 @@ class _AvailableServiceListState extends State<AvailableServiceList> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
+                                S_id = _loadservicelist[position]['_id'];
+                                service_station_id = _loadservicelist[position]
+                                    ['service_station_id'];
+                                service_name =
+                                    _loadservicelist[position]['service_name'];
+                                amount = _loadservicelist[position]['amount'];
+                                duration =
+                                    _loadservicelist[position]['duration'];
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            Servicestation()));
+                                        builder: (context) => Servicestation(
+                                            S_id,
+                                            service_station_id,
+                                            service_name,
+                                            amount,
+                                            duration)));
                               },
                               child: Ink(
                                 decoration: BoxDecoration(

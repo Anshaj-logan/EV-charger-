@@ -1,52 +1,60 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newpro/screens/Payment/battery_payment_screen.dart';
 import 'package:newpro/screens/user/batteryshop.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../api.dart';
+import 'batteryBooking.dart';
 
 class AvailableBatteryList extends StatefulWidget {
-  const AvailableBatteryList({Key? key}) : super(key: key);
+  late String battery_shop_id;
+
+  AvailableBatteryList(this.battery_shop_id);
 
   @override
   State<AvailableBatteryList> createState() => _AvailableBatteryListState();
 }
 
 class _AvailableBatteryListState extends State<AvailableBatteryList> {
-  List Vehicle_name = [
-    'Ather',
-    'Ola',
-    'Hero Electric',
-    'Bajaj Chetak',
-    'iQube',
-    'Bounce ',
-    'Hero Electric'
-  ];
-  List Model_name = [
-    '450 Plus Gen 3',
-    'S1 STD',
-    'Flash S1 STD',
-    'Premium',
-    'ST',
-    'Infinity E1',
-    'Optima Plus'
-  ];
-  List Capacity = [
-    '20AH',
-    '22AH',
-    '24AH',
-    '24AH',
-    '20AH',
-    '22AH',
-    '24AH',
-  ];
-  List Price = [
-    '11000',
-    '12000',
-    '13000',
-    '14000',
-    '19000',
-    '10000',
-    '13000',
-  ];
+  late SharedPreferences localStrorage;
+  late String battery_shop_id;
+  late String B_id;
+  late String vehicle_name;
+  late String model_name;
+  late String capacity;
+  late String amount;
+
+  List _loadbatterylist = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchData();
+  }
+
+  _fetchData() async {
+    String data = "${widget.battery_shop_id}";
+    print("idddd${data}");
+    var res = await Api().getData('/api/battery/view-battery/' + data);
+
+    if (res.statusCode == 200) {
+      var items = json.decode(res.body)['data'];
+      print(items);
+      setState(() {
+        _loadbatterylist = items;
+      });
+    } else {
+      setState(() {
+        _loadbatterylist = [];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +79,8 @@ class _AvailableBatteryListState extends State<AvailableBatteryList> {
         ),
       ),
       body: ListView.builder(
-          itemCount: Vehicle_name.length,
+          shrinkWrap: true,
+          itemCount: _loadbatterylist.length,
           itemBuilder: (BuildContext context, int position) {
             return Card(
               child: Column(
@@ -93,14 +102,14 @@ class _AvailableBatteryListState extends State<AvailableBatteryList> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              Vehicle_name[position],
+                              _loadbatterylist[position]['vehicle_name'],
                               style: TextStyle(fontSize: 25),
                             ),
-                            Text(Model_name[position],
+                            Text(_loadbatterylist[position]['model_name'],
                                 style: TextStyle(fontSize: 24)),
-                            Text(Capacity[position],
+                            Text(_loadbatterylist[position]['capacity'],
                                 style: TextStyle(fontSize: 22)),
-                            Text("\₹-${Price[position]}",
+                            Text("\₹-${_loadbatterylist[position]['amount']}",
                                 style: TextStyle(fontSize: 22)),
                           ],
                         ),
@@ -115,11 +124,24 @@ class _AvailableBatteryListState extends State<AvailableBatteryList> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
+                          battery_shop_id =
+                              _loadbatterylist[position]['battery_shop_id'];
+                          B_id = _loadbatterylist[position]['_id'];
+                          vehicle_name =
+                              _loadbatterylist[position]['vehicle_name'];
+                          model_name = _loadbatterylist[position]['model_name'];
+                          capacity = _loadbatterylist[position]['capacity'];
+                          amount = _loadbatterylist[position]['amount'];
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      Battery_Payment_Screen()));
+                                  builder: (context) => BatteryBooking(
+                                      battery_shop_id,
+                                      B_id,
+                                      vehicle_name,
+                                      model_name,
+                                      capacity,
+                                      amount)));
                         },
                         child: Ink(
                           decoration: BoxDecoration(

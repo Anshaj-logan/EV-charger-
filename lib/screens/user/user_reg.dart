@@ -7,7 +7,8 @@ import 'package:newpro/register_dashboard.dart';
 import '../api.dart';
 import '../mainloginpage.dart';
 
-class UserRegister extends StatelessWidget {
+class UserRegister
+extends StatelessWidget {
   const UserRegister({super.key});
 
   @override
@@ -16,6 +17,7 @@ class UserRegister extends StatelessWidget {
         debugShowCheckedModeBanner: false, home: MyStatefulWidget());
   }
 }
+
 
 class MyStatefulWidget extends StatefulWidget {
   const MyStatefulWidget({Key? key}) : super(key: key);
