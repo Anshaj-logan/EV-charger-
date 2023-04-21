@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../api.dart';
 
 class Sfeedback extends StatefulWidget {
   const Sfeedback({super.key});
@@ -9,6 +14,43 @@ class Sfeedback extends StatefulWidget {
 }
 
 class _SfeedbackState extends State<Sfeedback> {
+  late SharedPreferences localStrorage;
+
+  late String serviceStationId;
+
+  List _loadfdbklist = [];
+  bool isLoading = false;
+  late String _id;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchData();
+  }
+
+  _fetchData() async {
+    localStrorage = await SharedPreferences.getInstance();
+    serviceStationId = (localStrorage.getString('serviceStationId') ?? '');
+    print('new service ${serviceStationId})');
+
+    var res = await Api().getData(
+        '/api/user/view-feedback/service_station_id/' +
+            serviceStationId.replaceAll('"', ''));
+    print(res);
+    if (res.statusCode == 200) {
+      var items = json.decode(res.body)['data'];
+      print(items);
+      setState(() {
+        _loadfdbklist = items;
+      });
+    } else {
+      setState(() {
+        _loadfdbklist = [];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,81 +66,41 @@ class _SfeedbackState extends State<Sfeedback> {
           ),
         ),
         title: Padding(
-          padding: const EdgeInsets.only(left: 50),
+          padding: const EdgeInsets.only(left: 40),
           child: Text(
-            'Feedbaks',
+            'Feedback',
             style: GoogleFonts.montserrat(
                 fontWeight: FontWeight.bold, fontSize: 25),
           ),
         ),
       ),
-      body: Container(
-        height: double.maxFinite,
-        width: double.maxFinite,
-        //decoration: BoxDecoration(image: DecorationImage(image: NetworkImage("https://www.ssr-inc.com/wp-content/uploads/EV-charging-1082x546.jpg"),fit: BoxFit.cover)),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 7,
-                    minLines: 3,
-                    decoration: InputDecoration(
-                      hintText: "Feedback",
-                      labelText: "Add your feedback",
-                      icon: Icon(
-                        Icons.reply,
-                        color: Colors.blue,
-                      ),
-                      border: OutlineInputBorder(),
-                    ),
+      body: ListView.separated(
+          itemBuilder: (ctx, index) {
+            return Card(
+              child: ListTile(
+                  title: Text(
+                    'User Name: ${_loadfdbklist[index]['name']}',
+                    style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w600, fontSize: 18),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [
-                            Color(0xFFD9C231),
-                            Color(0xFF18A6E4),
-                          ],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Container(
-                        constraints:
-                            BoxConstraints(maxWidth: 110, minHeight: 30),
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Send",
-                          style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.bold, fontSize: 20),
-                        )),
+                  subtitle: Text(
+                    _loadfdbklist[index]['feedback'],
+                    style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w600, fontSize: 18),
                   ),
-                  style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding: EdgeInsets.all(0.0)),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+                  leading: Text(
+                    _loadfdbklist[index]['date'],
+                    style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.bold, fontSize: 15),
+                  )),
+            );
+          },
+          separatorBuilder: (ctx, index) {
+            return SizedBox(
+              height: 10,
+            );
+          },
+          itemCount: _loadfdbklist.length),
     );
   }
 }

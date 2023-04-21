@@ -26,7 +26,8 @@ class _ChargingSlotsState extends State<ChargingSlots> {
   late String Charge_id;
   List _loadslotlist = [];
   bool isLoading = false;
-
+  bool isVisible = true;
+  bool isVisibl = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -52,23 +53,6 @@ class _ChargingSlotsState extends State<ChargingSlots> {
       });
     }
   }
-
-  // List Available_slots = [
-  //   'Slot-1',
-  //   'Slot-2',
-  //   'Slot-3',
-  //   'Slot-4',
-  //   'Slot-5',
-  //   'Slot-6',
-  // ];
-  // List Status = [
-  //   'Availble',
-  //   'Not Availble',
-  //   'Availble',
-  //   'Availble',
-  //   'Not Availble',
-  //   'Availble',
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -131,47 +115,103 @@ class _ChargingSlotsState extends State<ChargingSlots> {
                         ),
                         Column(
                           children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                Charge_id = _loadslotlist[position]
-                                    ['charging_station_id'];
-                                slot = _loadslotlist[position]['slot_no'];
-                                // String log_id = "${widget.Log_id}";
-                                // login_id = log_id;
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            Chargingstation(Charge_id, slot)));
-                              },
-                              child: Ink(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xFF3FAAB9),
-                                        Color(0xFF993FB9)
-                                      ],
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight),
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Container(
-                                    constraints: BoxConstraints(
-                                        maxWidth: 100, minHeight: 30),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      "Choose",
-                                      style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
-                                    )),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
+                            _loadslotlist[position]['status'] == "Busy"
+                                ? Visibility(
+                                    visible: isVisible,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        // Charge_id = _loadslotlist[position]
+                                        //     ['charging_station_id'];
+                                        // slot =
+                                        //     _loadslotlist[position]['slot_no'];
+                                        // // String log_id = "${widget.Log_id}";
+                                        // // login_id = log_id;
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) =>
+                                        //             Chargingstation(
+                                        //                 Charge_id, slot)));
+                                      },
+                                      child: Ink(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                              colors: [
+                                                Color(0xFF3FAAB9),
+                                                Color(0xFF993FB9)
+                                              ],
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight),
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                        ),
+                                        child: Container(
+                                            constraints: BoxConstraints(
+                                                maxWidth: 100, minHeight: 30),
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "Choose",
+                                              style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            )),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                          ),
+                                          padding: EdgeInsets.all(0.0)),
+                                    ),
+                                  )
+                                : Visibility(
+                                    visible: isVisible,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Charge_id = _loadslotlist[position]
+                                            ['charging_station_id'];
+                                        slot =
+                                            _loadslotlist[position]['slot_no'];
+                                        // String log_id = "${widget.Log_id}";
+                                        // login_id = log_id;
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Chargingstation(
+                                                        Charge_id, slot)));
+                                      },
+                                      child: Ink(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                              colors: [
+                                                Color(0xFF3FAAB9),
+                                                Color(0xFF993FB9)
+                                              ],
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight),
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                        ),
+                                        child: Container(
+                                            constraints: BoxConstraints(
+                                                maxWidth: 100, minHeight: 30),
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "Choose",
+                                              style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            )),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                          ),
+                                          padding: EdgeInsets.all(0.0)),
+                                    ),
                                   ),
-                                  padding: EdgeInsets.all(0.0)),
-                            ),
                           ],
                         ),
                       ],

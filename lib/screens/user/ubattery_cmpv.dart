@@ -8,21 +8,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api.dart';
 
-class Ucomplaint extends StatefulWidget {
-  const Ucomplaint({super.key});
+class UbatteryCmp extends StatefulWidget {
+  const UbatteryCmp({Key? key}) : super(key: key);
 
   @override
-  State<Ucomplaint> createState() => _UcomplaintState();
+  State<UbatteryCmp> createState() => _UbatteryCmpState();
 }
 
-enum station { charging_station, service_station }
-
-class _UcomplaintState extends State<Ucomplaint> {
-  station? _station;
+class _UbatteryCmpState extends State<UbatteryCmp> {
+  // station? _station;
   bool _isLoading = false;
   late String login_id;
   late SharedPreferences localStorage;
-
+  List _loadCharginglist = [];
+  List _loadServicelist = [];
   late String charge;
   late String service;
   TextEditingController complaint = TextEditingController();
@@ -40,7 +39,6 @@ class _UcomplaintState extends State<Ucomplaint> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     getAllId();
   }
 
@@ -57,11 +55,11 @@ class _UcomplaintState extends State<Ucomplaint> {
       "login_id": Login_id.replaceAll('"', ''),
       "date": startDate,
       "complaint": complaint.text,
-      "service_station_id": selectId,
+      "battery_shop_id": selectId,
     };
     print(data);
     var res =
-        await Api().authData(data, '/api/user/add-complaint-service-station');
+        await Api().authData(data, '/api/user/add-complaint-battery-shop');
     var body = json.decode(res.body);
 
     print(body);
@@ -102,7 +100,7 @@ class _UcomplaintState extends State<Ucomplaint> {
   List vol_id = [];
   String? selectId;
   Future getAllId() async {
-    var res = await Api().getData('/api/user/view-service-station');
+    var res = await Api().getData('/api/user/view-battery-shop');
     var body = json.decode(res.body);
 
     print(res);
@@ -159,7 +157,7 @@ class _UcomplaintState extends State<Ucomplaint> {
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30)),
                           ),
-                          hint: Text('Service_station'),
+                          hint: Text('Battery-shop'),
                           style: TextStyle(color: Colors.black),
                           value: selectId,
                           items: vol_id
@@ -178,41 +176,6 @@ class _UcomplaintState extends State<Ucomplaint> {
                           }),
                     ),
                   ),
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //       child: ListTile(
-                  //         title: const Text('Charging Station'),
-                  //         leading: Radio<station>(
-                  //           value: station.charging_station,
-                  //           groupValue: _station,
-                  //           onChanged: (station? value) {
-                  //             setState(() {
-                  //               _station = value;
-                  //               _fetchChargingData();
-                  //             });
-                  //           },
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     Expanded(
-                  //       child: ListTile(
-                  //         title: const Text('Service Station'),
-                  //         leading: Radio<station>(
-                  //           value: station.service_station,
-                  //           groupValue: _station,
-                  //           onChanged: (station? value) {
-                  //             setState(() {
-                  //               _station = value;
-                  //
-                  //               -_fetchServiceData();
-                  //             });
-                  //           },
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                   SizedBox(
                     height: 10,
                   ),

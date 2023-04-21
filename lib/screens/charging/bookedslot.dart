@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +19,7 @@ class _BookedslotsState extends State<Bookedslots> {
   String slot_no = "";
   String status = "";
   late String charging_station_id;
+  late String _id;
 
   List _loadbookslotlist = [];
   bool isLoading = false;
@@ -51,36 +53,66 @@ class _BookedslotsState extends State<Bookedslots> {
     }
   }
 
-  // List Booked_slots = [
-  //   'slot 2',
-  //   'slot 3',
-  //   'slot 6',
-  //   'slot 9',
-  // ];
-  // List Amount = [
-  //   '500/-',
-  //   '400/-',
-  //   '600/-',
-  //   '300/-',
-  // ];
-  // List Duration = [
-  //   '5 h',
-  //   '4 h',
-  //   '6 h',
-  //   '3 h',
-  // ];
-  // List Date = [
-  //   '2.3.2023',
-  //   '3.5.2023',
-  //   '4.3.2023',
-  //   '5.3.2023',
-  // ];
-  // List Time = [
-  //   '5:00 PM',
-  //   '4:30 PM',
-  //   '6:00 PM',
-  //   '11:30 AM',
-  // ];
+  _confirm(String id) async {
+    setState(() {
+      var _isLoading = true;
+    });
+
+    var data = {"_id": id};
+    print(data);
+    var res = await Api()
+        .getData('/api/charging/charging-station-accept-booking/' + id);
+    var body = json.decode(res.body);
+
+    if (body['success'] == true) {
+      print("body of res${body}");
+
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Bookedslots()));
+      print(body['message']);
+    } else {
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+    }
+  }
+
+  _reject(String id) async {
+    setState(() {
+      var _isLoading = true;
+    });
+
+    var data = {"_id": id};
+    print(data);
+    var res = await Api()
+        .getData('/api/charging/charging-station-reject-booking/' + id);
+    var body = json.decode(res.body);
+
+    if (body['success'] == true) {
+      print("body of res${body}");
+
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Bookedslots()));
+      print(body['message']);
+    } else {
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,7 +165,10 @@ class _BookedslotsState extends State<Bookedslots> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                _id = _loadbookslotlist[position]['_id'];
+                                _confirm(_id);
+                              },
                               child: Ink(
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
@@ -167,7 +202,10 @@ class _BookedslotsState extends State<Bookedslots> {
                               width: 10,
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                _id = _loadbookslotlist[position]['_id'];
+                                _reject(_id);
+                              },
                               child: Ink(
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(

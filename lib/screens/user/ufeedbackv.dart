@@ -31,6 +31,28 @@ class _UfeedbackState extends State<Ufeedback> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    getAllId();
+  }
+
+  List service = [];
+  String? selectId;
+  Future getAllId() async {
+    var res = await Api().getData('/api/user/view-service-station');
+    var body = json.decode(res.body);
+
+    print(res);
+    setState(() {
+      print(body);
+      service = body['data'];
+      // depart_id = body['data'][0]['_id'];
+    });
+  }
+
   final _formKey = GlobalKey<FormState>();
   void Addfeedback() async {
     localStorage = await SharedPreferences.getInstance();
@@ -44,6 +66,7 @@ class _UfeedbackState extends State<Ufeedback> {
       "login_id": Login_id.replaceAll('"', ''),
       "date": startDate,
       "feedback": feedback.text,
+      "service_station_id": selectId,
     };
     print(data);
     var res = await Api().authData(data, '/api/user/add-feedback');
@@ -119,6 +142,36 @@ class _UfeedbackState extends State<Ufeedback> {
               children: [
                 SizedBox(
                   height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: double.maxFinite,
+                    child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          disabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30)),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30)),
+                        ),
+                        hint: Text('Service_station'),
+                        style: TextStyle(color: Colors.black),
+                        value: selectId,
+                        items: service
+                            .map((type) => DropdownMenuItem<String>(
+                                  value: type['_id'].toString(),
+                                  child: Text(
+                                    type['name'].toString(),
+                                    style: TextStyle(color: Colors.black26),
+                                  ),
+                                ))
+                            .toList(),
+                        onChanged: (type) {
+                          setState(() {
+                            selectId = type;
+                          });
+                        }),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),

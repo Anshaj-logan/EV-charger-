@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api.dart';
+import 'battery_cmp.dart';
 
 class BatteryNew extends StatefulWidget {
   const BatteryNew({Key? key}) : super(key: key);
@@ -17,6 +19,7 @@ class _BatteryNewState extends State<BatteryNew> {
   late SharedPreferences localStrorage;
 
   late String batteryShopId;
+  late String _id;
 
   List _loadbookslotlist = [];
   bool isLoading = false;
@@ -50,6 +53,35 @@ class _BatteryNewState extends State<BatteryNew> {
     }
   }
 
+  _completed(String id) async {
+    setState(() {
+      var _isLoading = true;
+    });
+
+    var data = {"_id": id};
+    print(data);
+    var res = await Api().getData('/api/battery/accept-completed/' + id);
+    var body = json.decode(res.body);
+
+    if (body['success'] == true) {
+      print("body of res${body}");
+
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => BatteryCmp()));
+      print(body['message']);
+    } else {
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -62,7 +94,10 @@ class _BatteryNewState extends State<BatteryNew> {
                       fontWeight: FontWeight.w600, fontSize: 18),
                 ),
                 trailing: IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    _id = _loadbookslotlist[index]['_id'];
+                    _completed(_id);
+                  },
                   icon: Icon(
                     Icons.navigate_next,
                     color: Colors.green,

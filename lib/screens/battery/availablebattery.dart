@@ -91,64 +91,6 @@ class _AvailablebatteryState extends State<Availablebattery> {
     }
   }
 
-  // _fetchDel() async {
-  //   localStrorage = await SharedPreferences.getInstance();
-  //
-  //   _id = (localStrorage.getString('_id') ?? '');
-  //   print('new del ${_id}');
-  //
-  //   var res = await Api()
-  //       .getData('/api/battery/delete-battery/' + _id.replaceAll('"', ''));
-  //   print(res);
-  //   if (res.statusCode == 200) {
-  //     var items = json.decode(res.body)['data'];
-  //     print(items);
-  //     setState(() {
-  //       _loadbatterylist = items;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       _loadbatterylist = [];
-  //     });
-  //   }
-  // }
-  // List Vehicle_name = [
-  //   'Ather',
-  //   'Ola',
-  //   'Hero Electric Flash',
-  //   'Bajaj Chetak',
-  //   'iQube',
-  //   'Bounce Infinity E1',
-  //   'Hero Electric Optima',
-  // ];
-  // List Model_name = [
-  //   'Ather 450 Plus Gen 3',
-  //   'Ola S1 STD',
-  //   'Hero Electric Flash S1 STD',
-  //   'Bajaj Chetak Premium',
-  //   ' iQube Electric ST',
-  //   'Bounce Infinity E1',
-  //   'Hero Electric Optima Plus',
-  // ];
-  // List Capacity = [
-  //   "200 Wh",
-  //   "250 Wh",
-  //   "200 Wh",
-  //   "350 Wh",
-  //   "310 Wh",
-  //   "300 Wh",
-  //   "200 Wh",
-  // ];
-  // List Amount = [
-  //   "650/-",
-  //   "700/-",
-  //   "650/-",
-  //   "950/-",
-  //   "900/-",
-  //   "850/-",
-  //   "650/-",
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

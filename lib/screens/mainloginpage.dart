@@ -97,14 +97,24 @@ class _LoginPageState extends State<LoginPage> {
       localStorage.setString('role', role.toString());
       localStorage.setString(
           'loginId', json.encode(body['login_id']).toString());
+      localStorage.setString('U_Id', json.encode(body['user_id']).toString());
       localStorage.setString(
           'chargingStationIid', json.encode(body['chargingStationIid']));
       localStorage.setString(
+          'charging_station_name', json.encode(body['charging_station_name']));
+      localStorage.setString(
           'batteryShopId', json.encode(body['batteryShopId']));
       localStorage.setString(
+          'battery_shop_name', json.encode(body['shopName']));
+      localStorage.setString(
           'serviceStationId', json.encode(body['serviceStationId']));
+      localStorage.setString(
+          'service_station_name', json.encode(body['serviceStationName']));
 
       String loginid = (localStorage.getString('login_id') ?? '');
+      String charge_name =
+          (localStorage.getString('charging_station_name') ?? '');
+      print('charging name ${charge_name}');
       // String chargeid = (localStorage.getString('chargingStationIid') ?? '');
       print(loginid);
       print(chargeid);

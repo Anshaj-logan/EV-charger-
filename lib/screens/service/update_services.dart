@@ -39,12 +39,12 @@ class _UpdateServicesState extends State<UpdateServices> {
     // TODO: implement initState
     super.initState();
 
-    _viewBattery();
+    _viewService();
   }
 
-  Future<void> _viewBattery() async {
+  Future<void> _viewService() async {
     S_id = widget._id;
-    print('B_id ${S_id}');
+    print('S_id ${S_id}');
     var res = await Api().getData('/api/station/view-single-station/' + S_id);
     var body = json.decode(res.body);
     print('body of datas${body}');

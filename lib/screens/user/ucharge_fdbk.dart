@@ -3,30 +3,29 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:newpro/screens/user/userhome.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api.dart';
-import 'batteryshophome.dart';
 
-class Notifications extends StatefulWidget {
-  const Notifications({super.key});
+class UchargeFdbk extends StatefulWidget {
+  const UchargeFdbk({Key? key}) : super(key: key);
 
   @override
-  State<Notifications> createState() => _NotificationsState();
+  State<UchargeFdbk> createState() => _UchargeFdbkState();
 }
 
-class _NotificationsState extends State<Notifications> {
+class _UchargeFdbkState extends State<UchargeFdbk> {
   bool _isLoading = false;
-  late String batteryShopId;
-  late String battery_shop_name;
+  late String login_id;
   late SharedPreferences localStorage;
 
-  TextEditingController notification = TextEditingController();
+  TextEditingController feedback = TextEditingController();
 
   @override
   void dispose() {
     // idController.dispose();
-    notification.dispose();
+    feedback.dispose();
 
     // TODO: implement dispose
     super.dispose();
@@ -40,40 +39,37 @@ class _NotificationsState extends State<Notifications> {
     getAllId();
   }
 
-  List service = [];
+  List charge = [];
   String? selectId;
   Future getAllId() async {
-    var res = await Api().getData('/api/user/view-user');
+    var res = await Api().getData('/api/user/view-charging-station/');
     var body = json.decode(res.body);
 
     print(res);
     setState(() {
       print(body);
-      service = body['data'];
+      charge = body['data'];
       // depart_id = body['data'][0]['_id'];
     });
   }
 
   final _formKey = GlobalKey<FormState>();
-  void AddNotification() async {
+  void Addfeedback() async {
     localStorage = await SharedPreferences.getInstance();
-    batteryShopId = (localStorage.getString('batteryShopId') ?? '');
-    print('User login ${batteryShopId}');
-    battery_shop_name = (localStorage.getString('battery_shop_name') ?? '');
-    print('service name ${battery_shop_name}');
+    String Login_id = (localStorage.getString('loginId') ?? '');
+    print('User login ${Login_id}');
     setState(() {
       _isLoading = true;
     });
 
     var data = {
-      "battery_shop_id": batteryShopId.replaceAll('"', ''),
-      "battery_shop_name": battery_shop_name.replaceAll('"', ''),
+      "login_id": Login_id.replaceAll('"', ''),
       "date": startDate,
-      "notification": notification.text,
-      "user_id": selectId,
+      "feedback": feedback.text,
+      "charging_station_id": selectId,
     };
     print(data);
-    var res = await Api().authData(data, '/api/user/add-notification');
+    var res = await Api().authData(data, '/api/user/add-feedback');
     var body = json.decode(res.body);
 
     print(body);
@@ -85,7 +81,7 @@ class _NotificationsState extends State<Notifications> {
       );
 
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Batteryhome()));
+          context, MaterialPageRoute(builder: (context) => UserHome()));
     } else {
       Fluttertoast.showToast(
         msg: body['message'].toString(),
@@ -120,15 +116,15 @@ class _NotificationsState extends State<Notifications> {
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-              Color(0xFF3FAAB9),
-              Color(0xFF993FB9),
+              Color(0xFF3FB95C),
+              Color(0xFF3F83B9),
             ], transform: GradientRotation(90)),
           ),
         ),
         title: Padding(
           padding: const EdgeInsets.only(left: 50),
           child: Text(
-            'Add Notification',
+            'Feedbacks',
             style: GoogleFonts.montserrat(
                 fontWeight: FontWeight.bold, fontSize: 25),
           ),
@@ -158,10 +154,10 @@ class _NotificationsState extends State<Notifications> {
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30)),
                         ),
-                        hint: Text('choose user'),
+                        hint: Text('Charging_station'),
                         style: TextStyle(color: Colors.black),
                         value: selectId,
-                        items: service
+                        items: charge
                             .map((type) => DropdownMenuItem<String>(
                                   value: type['_id'].toString(),
                                   child: Text(
@@ -208,13 +204,13 @@ class _NotificationsState extends State<Notifications> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
-                    controller: notification,
+                    controller: feedback,
                     keyboardType: TextInputType.multiline,
                     minLines: 3,
                     maxLines: 7,
                     decoration: InputDecoration(
-                      hintText: "Add Notification",
-                      labelText: "Add Notification",
+                      hintText: "Feedback",
+                      labelText: "Add your feedback",
                       icon: Icon(
                         Icons.message,
                         color: Colors.blue,
@@ -229,7 +225,7 @@ class _NotificationsState extends State<Notifications> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      AddNotification();
+                      Addfeedback();
                     },
                     child: Ink(
                       decoration: BoxDecoration(

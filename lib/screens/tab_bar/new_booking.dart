@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api.dart';
+import 'completed_booking.dart';
 
 class NewBookings extends StatefulWidget {
   const NewBookings({Key? key}) : super(key: key);
@@ -20,6 +22,7 @@ class _NewBookingsState extends State<NewBookings> {
 
   List _loadbookslotlist = [];
   bool isLoading = false;
+  late String _id;
 
   @override
   void initState() {
@@ -49,6 +52,35 @@ class _NewBookingsState extends State<NewBookings> {
     }
   }
 
+  _completed(String id) async {
+    setState(() {
+      var _isLoading = true;
+    });
+
+    var data = {"_id": id};
+    print(data);
+    var res = await Api().getData('/api/station/service-accept/' + id);
+    var body = json.decode(res.body);
+
+    if (body['success'] == true) {
+      print("body of res${body}");
+
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => CompletedBookings()));
+      print(body['message']);
+    } else {
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -61,7 +93,10 @@ class _NewBookingsState extends State<NewBookings> {
                       fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 trailing: IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    _id = _loadbookslotlist[index]['_id'];
+                    _completed(_id);
+                  },
                   icon: Icon(
                     Icons.build,
                     color: Colors.deepOrange,

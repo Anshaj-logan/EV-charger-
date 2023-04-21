@@ -3,26 +3,26 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:newpro/screens/user/ucomplaintv.dart';
 import 'package:newpro/screens/user/userhome.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api.dart';
 
-class Ucomplaint extends StatefulWidget {
-  const Ucomplaint({super.key});
+class UChargeCmp extends StatefulWidget {
+  const UChargeCmp({Key? key}) : super(key: key);
 
   @override
-  State<Ucomplaint> createState() => _UcomplaintState();
+  State<UChargeCmp> createState() => _UChargeCmpState();
 }
 
-enum station { charging_station, service_station }
-
-class _UcomplaintState extends State<Ucomplaint> {
+class _UChargeCmpState extends State<UChargeCmp> {
   station? _station;
   bool _isLoading = false;
   late String login_id;
   late SharedPreferences localStorage;
-
+  List _loadCharginglist = [];
+  List _loadServicelist = [];
   late String charge;
   late String service;
   TextEditingController complaint = TextEditingController();
@@ -40,8 +40,27 @@ class _UcomplaintState extends State<Ucomplaint> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _fetchChargingData();
 
     getAllId();
+  }
+
+  _fetchChargingData() async {
+    var res = await Api().getData('/api/user/view-charging-station/');
+
+    if (res.statusCode == 200) {
+      var charging = json.decode(res.body)['data'];
+      print('charging data${charging}');
+      String charging_id = charging[0]['_id'];
+      print(charging_id);
+      setState(() {
+        _loadCharginglist = charging;
+      });
+    } else {
+      setState(() {
+        _loadCharginglist = [];
+      });
+    }
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -57,11 +76,11 @@ class _UcomplaintState extends State<Ucomplaint> {
       "login_id": Login_id.replaceAll('"', ''),
       "date": startDate,
       "complaint": complaint.text,
-      "service_station_id": selectId,
+      "charging_station_id": selectId,
     };
     print(data);
     var res =
-        await Api().authData(data, '/api/user/add-complaint-service-station');
+        await Api().authData(data, '/api/user/add-complaint-charging-station');
     var body = json.decode(res.body);
 
     print(body);
@@ -102,7 +121,7 @@ class _UcomplaintState extends State<Ucomplaint> {
   List vol_id = [];
   String? selectId;
   Future getAllId() async {
-    var res = await Api().getData('/api/user/view-service-station');
+    var res = await Api().getData('/api/user/view-charging-station/');
     var body = json.decode(res.body);
 
     print(res);
@@ -159,7 +178,7 @@ class _UcomplaintState extends State<Ucomplaint> {
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30)),
                           ),
-                          hint: Text('Service_station'),
+                          hint: Text('Charging_station'),
                           style: TextStyle(color: Colors.black),
                           value: selectId,
                           items: vol_id

@@ -6,19 +6,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api.dart';
 
-class Ccomplaints extends StatefulWidget {
-  const Ccomplaints({super.key});
+class UserNotification extends StatefulWidget {
+  const UserNotification({Key? key}) : super(key: key);
 
   @override
-  State<Ccomplaints> createState() => _CcomplaintsState();
+  State<UserNotification> createState() => _UserNotificationState();
 }
 
-class _CcomplaintsState extends State<Ccomplaints> {
+class _UserNotificationState extends State<UserNotification> {
   late SharedPreferences localStrorage;
 
-  late String chargingStationIid;
+  late String U_Id;
 
-  List _loadcomplaintlist = [];
+  List _loadnotlist = [];
   bool isLoading = false;
   late String _id;
 
@@ -31,22 +31,21 @@ class _CcomplaintsState extends State<Ccomplaints> {
 
   _fetchData() async {
     localStrorage = await SharedPreferences.getInstance();
-    chargingStationIid = (localStrorage.getString('chargingStationIid') ?? '');
-    print('new charging ${chargingStationIid})');
+    U_Id = (localStrorage.getString('U_Id') ?? '');
+    print('User_id ${U_Id}');
 
-    var res = await Api().getData(
-        '/api/user//view-complaint-charging-station/' +
-            chargingStationIid.replaceAll('"', ''));
+    var res = await Api()
+        .getData('/api/user/view-notification/' + U_Id.replaceAll('"', ''));
     print(res);
     if (res.statusCode == 200) {
       var items = json.decode(res.body)['data'];
       print(items);
       setState(() {
-        _loadcomplaintlist = items;
+        _loadnotlist = items;
       });
     } else {
       setState(() {
-        _loadcomplaintlist = [];
+        _loadnotlist = [];
       });
     }
   }
@@ -60,15 +59,15 @@ class _CcomplaintsState extends State<Ccomplaints> {
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-              Color(0xFF31B5D9),
-              Color(0xFF31B0D9),
+              Color(0xFF3FB95C),
+              Color(0xFF3F83B9),
             ], transform: GradientRotation(90)),
           ),
         ),
         title: Padding(
-          padding: const EdgeInsets.only(left: 40),
+          padding: const EdgeInsets.only(left: 50),
           child: Text(
-            'Complaints',
+            'Notification',
             style: GoogleFonts.montserrat(
                 fontWeight: FontWeight.bold, fontSize: 25),
           ),
@@ -78,29 +77,24 @@ class _CcomplaintsState extends State<Ccomplaints> {
           itemBuilder: (ctx, index) {
             return Card(
               child: ListTile(
-                  title: Text(
-                    'User Name: ${_loadcomplaintlist[index]['name']}',
+                  leading: Text(
+                    _loadnotlist[index]['charging_name'] != null
+                        ? _loadnotlist[index]['charging_name']
+                        : _loadnotlist[index]['service_name'] != null
+                            ? _loadnotlist[index]['service_name']
+                            : _loadnotlist[index]['battery_name'] != null
+                                ? _loadnotlist[index]['battery_name']
+                                : "",
                     style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.bold, fontSize: 20),
                   ),
-                  // trailing: IconButton(
-                  //   onPressed: () async {
-                  //     // _id = _loadbookslotlist[index]['_id'];
-                  //     // _completed(_id);
-                  //   },
-                  //   icon: Icon(
-                  //     Icons.reply,
-                  //     color: Colors.blue,
-                  //     size: 40,
-                  //   ),
-                  // ),
-                  subtitle: Text(
-                    _loadcomplaintlist[index]['complaint'],
+                  title: Text(
+                    _loadnotlist[index]['notification'],
                     style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w800, fontSize: 18),
+                        fontWeight: FontWeight.w600, fontSize: 20),
                   ),
-                  leading: Text(
-                    _loadcomplaintlist[index]['date'],
+                  trailing: Text(
+                    _loadnotlist[index]['date'],
                     style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w600, fontSize: 15),
                   )),
@@ -111,7 +105,7 @@ class _CcomplaintsState extends State<Ccomplaints> {
               height: 10,
             );
           },
-          itemCount: _loadcomplaintlist.length),
+          itemCount: _loadnotlist.length),
     );
   }
 }

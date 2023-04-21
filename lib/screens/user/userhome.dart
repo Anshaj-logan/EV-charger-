@@ -12,7 +12,10 @@ import 'package:newpro/screens/user/servicestation.dart';
 import 'package:newpro/screens/user/ucomplaintv.dart';
 import 'package:newpro/screens/user/ufeedbackv.dart';
 import 'package:newpro/screens/user/userProfile.dart';
+import 'package:newpro/screens/user/user_cmp_dashboard.dart';
+import 'package:newpro/screens/user/user_fdbk_dashboard.dart';
 
+import 'Unotification.dart';
 import 'batteryshop.dart';
 import 'chargingstation.dart';
 
@@ -46,16 +49,16 @@ class _UserHomeState extends State<UserHome> {
                 fontWeight: FontWeight.bold, fontSize: 25),
           ),
         ),
-        // leading: TextButton(
-        //     onPressed: () {
-        //       Navigator.push(context,
-        //           MaterialPageRoute(builder: (context) => LoginPage()));
-        //     },
-        //     child: Icon(
-        //       Icons.logout,
-        //       color: Colors.white,
-        //       size: 30,
-        //     )),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserNotification()));
+              },
+              icon: Icon(Icons.notifications)),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -216,8 +219,11 @@ class _UserHomeState extends State<UserHome> {
                 kheight,
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Ucomplaint()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UserCmpDashboard()));
+                    // Ucomplaint()));
                   },
                   child: Ink(
                     decoration: BoxDecoration(
@@ -246,8 +252,10 @@ class _UserHomeState extends State<UserHome> {
                 kheight,
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Ufeedback()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UserFeedbackDashboard()));
                   },
                   child: Ink(
                     decoration: BoxDecoration(

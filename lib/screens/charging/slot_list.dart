@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:newpro/screens/charging/addslots.dart';
 import 'package:newpro/screens/charging/slot_status.dart';
@@ -23,6 +24,7 @@ class _SlotsViewState extends State<SlotsView> {
 
   List _loadslotlist = [];
   bool isLoading = false;
+  late String _id;
 
   @override
   void initState() {
@@ -49,6 +51,35 @@ class _SlotsViewState extends State<SlotsView> {
       setState(() {
         _loadslotlist = [];
       });
+    }
+  }
+
+  _confirm(String id) async {
+    setState(() {
+      var _isLoading = true;
+    });
+
+    var data = {"_id": id};
+    print(data);
+    var res = await Api().getData('/api/charging/update-slot/' + id);
+    var body = json.decode(res.body);
+
+    if (body['success'] == true) {
+      print("body of res${body}");
+
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => SlotsView()));
+      print(body['message']);
+    } else {
+      Fluttertoast.showToast(
+        msg: body['message'].toString(),
+        backgroundColor: Colors.grey,
+      );
     }
   }
 
@@ -114,11 +145,14 @@ class _SlotsViewState extends State<SlotsView> {
                         Column(
                           children: [
                             ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SlotStatus()));
+                              onPressed: () async {
+                                _id = _loadslotlist[position]['_id'];
+                                _confirm(_id);
+
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => SlotStatus()));
                               },
                               child: Ink(
                                 decoration: BoxDecoration(
@@ -136,7 +170,7 @@ class _SlotsViewState extends State<SlotsView> {
                                         maxWidth: 100, minHeight: 30),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      "Choose",
+                                      "Status",
                                       style: GoogleFonts.montserrat(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20),

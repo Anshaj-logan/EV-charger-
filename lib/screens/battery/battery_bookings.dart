@@ -30,8 +30,8 @@ class _BatteryBookingsState extends State<BatteryBookings>
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-              Color(0xFFD9C231),
-              Color(0xFFFF5733),
+              Color(0xFF3FAAB9),
+              Color(0xFF993FB9),
             ], transform: GradientRotation(90)),
           ),
         ),
