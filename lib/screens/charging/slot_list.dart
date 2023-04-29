@@ -139,8 +139,14 @@ class _SlotsViewState extends State<SlotsView> {
                             //     style: TextStyle(fontSize: 18)),
                           ],
                         ),
-                        SizedBox(
-                          width: 20,
+                        // SizedBox(
+                        //   width: 20,
+                        // ),
+                        Column(
+                          children: [
+                            Text("₹-${_loadslotlist[position]['amount']}",
+                                style: TextStyle(fontSize: 20)),
+                          ],
                         ),
                         Column(
                           children: [

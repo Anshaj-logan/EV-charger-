@@ -24,6 +24,7 @@ class _ChargingSlotsState extends State<ChargingSlots> {
   String status = "";
   late String login_id;
   late String Charge_id;
+  late String amount;
   List _loadslotlist = [];
   bool isLoading = false;
   bool isVisible = true;
@@ -110,8 +111,14 @@ class _ChargingSlotsState extends State<ChargingSlots> {
                             //     style: TextStyle(fontSize: 18)),
                           ],
                         ),
-                        SizedBox(
-                          width: 20,
+                        // SizedBox(
+                        //   width: 20,
+                        // ),
+                        Column(
+                          children: [
+                            Text("₹-${_loadslotlist[position]['amount']}",
+                                style: TextStyle(fontSize: 20)),
+                          ],
                         ),
                         Column(
                           children: [
@@ -172,14 +179,16 @@ class _ChargingSlotsState extends State<ChargingSlots> {
                                             ['charging_station_id'];
                                         slot =
                                             _loadslotlist[position]['slot_no'];
+                                        amount =
+                                            _loadslotlist[position]['amount'];
                                         // String log_id = "${widget.Log_id}";
                                         // login_id = log_id;
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    Chargingstation(
-                                                        Charge_id, slot)));
+                                                    Chargingstation(Charge_id,
+                                                        slot, amount)));
                                       },
                                       child: Ink(
                                         decoration: BoxDecoration(

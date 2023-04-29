@@ -26,10 +26,12 @@ class _AddslotsState extends State<Addslots> {
 
   //TextEditingController idController = TextEditingController();
   TextEditingController slotController = TextEditingController();
+  TextEditingController amount = TextEditingController();
   @override
   void dispose() {
     // idController.dispose();
     slotController.dispose();
+    amount.dispose();
     // TODO: implement dispose
     super.dispose();
   }
@@ -46,6 +48,7 @@ class _AddslotsState extends State<Addslots> {
     var data = {
       "charging_station_id": chargingStationIid.replaceAll('"', ''),
       "slot_no": slotController.text,
+      "amount": amount.text,
     };
     print(data);
     var res = await Api().authData(data, '/api/charging/add-slot');
@@ -111,6 +114,20 @@ class _AddslotsState extends State<Addslots> {
                         hintText: "New Slot",
                         icon: Icon(
                           Icons.text_fields_sharp,
+                          color: Colors.blueGrey,
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: amount,
+                      decoration: InputDecoration(
+                        hintText: "Amount",
+                        icon: Icon(
+                          Icons.money,
                           color: Colors.blueGrey,
                         ),
                         border: OutlineInputBorder(),

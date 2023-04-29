@@ -12,8 +12,9 @@ import '../api.dart';
 class Chargingstation extends StatefulWidget {
   late String charging_station_id;
   late String slot;
+  late String amount;
 
-  Chargingstation(this.charging_station_id, this.slot);
+  Chargingstation(this.charging_station_id, this.slot, this.amount);
 
   @override
   State<Chargingstation> createState() => _ChargingstationState();
@@ -27,7 +28,7 @@ class _ChargingstationState extends State<Chargingstation> {
   late String startDate;
   bool _isLoading = false;
 
-  late String amounts;
+  // late String amounts;
   late SharedPreferences localStorage;
   _pressCreateAccountButton() {
     Bookslot();
@@ -58,8 +59,10 @@ class _ChargingstationState extends State<Chargingstation> {
     print('charging_station_id ${charge}');
     String slot = "${widget.slot}";
     print('slot-no ${slot}');
+    String amount = "${widget.amount}";
+    print('amount ${amount}');
 
-    amounts = amount.text;
+    // amounts = amount.text;
     setState(() {
       _isLoading = true;
     });
@@ -70,7 +73,7 @@ class _ChargingstationState extends State<Chargingstation> {
       "login_id": Login_id.replaceAll('"', ''),
       "charging_station_id": charge,
       "slot_no": slot,
-      "amount": amount.text,
+      "amount": amount
     };
     print(data);
     var res = await Api().authData(data, '/api/charging/slot-booking');
@@ -85,7 +88,7 @@ class _ChargingstationState extends State<Chargingstation> {
       );
 
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Payment(amounts)));
+          context, MaterialPageRoute(builder: (context) => Payment(amount)));
     } else {
       Fluttertoast.showToast(
         msg: body['message'].toString(),
@@ -253,20 +256,20 @@ class _ChargingstationState extends State<Chargingstation> {
                   // SizedBox(
                   //   height: 10,
                   // ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: amount,
-                      decoration: InputDecoration(
-                        hintText: "Amount",
-                        icon: Icon(
-                          Icons.payment,
-                          color: Colors.blueGrey,
-                        ),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: TextField(
+                  //     controller: amount,
+                  //     decoration: InputDecoration(
+                  //       hintText: "Amount",
+                  //       icon: Icon(
+                  //         Icons.payment,
+                  //         color: Colors.blueGrey,
+                  //       ),
+                  //       border: OutlineInputBorder(),
+                  //     ),
+                  //   ),
+                  // ),
                   SizedBox(
                     height: 10,
                   ),
